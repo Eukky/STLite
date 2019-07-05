@@ -16,23 +16,23 @@ namespace STLite{
     }
 
     template<class T>
-    inline void destory(T *ptr){
+    inline void destroy(T *ptr){
         ptr -> ~T();
     }
 
     template<class ForwardIterator>
-    inline void destory(ForwardIterator first, ForwardIterator last){
+    inline void destroy(ForwardIterator first, ForwardIterator last){
         typedef typename _type_traits<ForwardIterator>::is_POD_type is_POD_type;
-        _destory(first, last, is_POD_type());
+        _destroy(first, last, is_POD_type());
     }
 
     template<class ForwardIterator>
-    inline void _destory(ForwardIterator first, ForwardIterator last, _true_type){}
+    inline void _destroy(ForwardIterator first, ForwardIterator last, _true_type){}
 
     template<class ForwardIterator>
-    inline void _destory(ForwardIterator first, ForwardIterator last, _false_type){
+    inline void _destroy(ForwardIterator first, ForwardIterator last, _false_type){
         for(; first != last; ++first){
-            destory(&*first);
+            destroy(&*first);
         }
     }
 }
