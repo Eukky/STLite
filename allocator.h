@@ -8,7 +8,7 @@ namespace STLite{
     
     //空间配置器
     //将alloc类再次进行封装
-    template<class T>
+    template <class T>
     class allocator{
     public:
         typedef T           value_type;
@@ -30,14 +30,14 @@ namespace STLite{
         static void destroy(T *first, T *last);
     };
 
-    template<class T>
+    template <class T>
     T *allocator<T>::allocator(){
         //将返回的指针的类型转换为T类型
         return static_cast<T *>(alloc::allocator(sizeof(T)));
     }
 
     //给n个T单位分配内存
-    template<class T>
+    template <class T>
     T *allocator<T>::allocator(size_t n){
         if(n == 0){
             return 0;
@@ -45,32 +45,32 @@ namespace STLite{
         return static_cast<T *>(alloc::allocator(sizeof(T) * n));
     }
 
-    template<class T>
+    template <class T>
     void allocator<T>::deallcator(T *ptr){
         alloc::deallocate(static_cast<void *>(ptr), sizeof(T));
     }
 
-    template<class T>
+    template <class T>
     void allocator<T>::deallcator(T *ptr, size_t n){
         alloc::deallocate(static_cast<void *>(ptr), sizeof(T) * n);
     }
 
-    template<class T>
+    template <class T>
     void allocator<T>::construct(T *ptr){
         new(ptr)T();
     }
 
-    template<class T>
+    template <class T>
     void allocator<T>::construct(T *ptr, const T& value){
         new(ptr)T(value);
     }
 
-    template<class T>
+    template <class T>
     void allocator::destroy(T *ptr){
         ptr -> ~T();
     }
 
-    template<class T>
+    template <class T>
     void allocator::destroy(T *first, T *last){
         for(; first != last; ++first){
             first -> ~T();
