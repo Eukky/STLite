@@ -107,6 +107,26 @@ namespace STLite{
 		typedef const T*				   pointer;
 		typedef const T& 				   reference;
 	};
+
+    template <class Iterator>
+    inline typename iterator_traits<Iterator>::iterator_category
+    iterator_category(const Iterator& It){
+        typedef typename iterator_traits<Iterator>::iterator_category category;
+        return category();
+    }
+
+    template <class Iterator>
+    inline typename iterator_traits<Iterator>::value_type*
+    value_type(const Iterator& It){
+        return static_cast<typename iterator_traits<Iterator>::value_type*>(0);
+    }
+
+    template <class Iterator>
+    inline typename iterator_traits<Iterator>::difference_type*
+    difference_type(const Iterator& It){
+        return static_cast<typename iterator_traits<Iterator>::difference_type*>(0);
+    }
+
 }
 
 #endif
