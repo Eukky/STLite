@@ -32,7 +32,46 @@ namespace STLite{
     }
 
     //uninitialized_fill函数
-    
+    template <class ForwardIterator, class T>
+    void uninitialized_fill_aux(ForwardIterator first, ForwardIterator last,
+    const T& value, _true_type){
+        fill(first, last, value);
+    }
+
+    template <class ForwardIterator, class T>
+    void uninitialized_fill_aux(ForwardIterator first, ForwardIterator last,
+    const T& value, _false_type){
+        for(; first != last; ++first){
+            contruct(first, value);
+        }
+    }
+
+    template <class ForwardIterator, class T>
+    void uninitialized_fill(ForwardIterator first, ForwardIterator last, const T& value){
+        typedef typename _type_traits<T>::is_POD_type is_POD_type;
+        uninitialized_fill_aux(first, last, is_POD_type());
+    }
+
+    //uninitialized_fill_n函数
+    template <class ForwardIterator, class size, class T>
+    ForwardIterator uninitialized_fill_n_aux(ForwardIterator first, size n, const T& value, _true_type){
+        return fill_n(first, n, value);
+    }
+
+    template <class ForwardIterator, class size, class T>
+    ForwardIterator uninitialized_fill_n_aux(ForwardIterator first, size n, const T& value, _false_type){
+        int i = 0;
+        for(; i != n; ++i){
+            contruct((T*)(first + i), x)
+        }
+        return (first + i);
+    }
+
+    template <class ForwardIterator, class size, class T>
+    ForwardIterator uninitialized_fill_n(ForwardIterator first, size n, const T& value){
+        typedef typename _type_traits<T>::is_POD_type is_POD_type;
+        return uninitialized_fill_n_aux(first, n, value, is_POD_type());
+    }
 }
 
 #endif
