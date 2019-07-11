@@ -123,16 +123,16 @@ namespace STLite{
                         start_free = (char *)p;
                         end_free = start_free + i;
                         //递归调用自己，调整nobjs，任何残余零头最终都将被编入适当的freelist中备用
-                        return chunk_alloc(bytes, nobjs);
+                        return chunk_alloc(size, nobjs);
                     }
                 }
-                std::printf("Out of memory");
+                // printf("Out of memory");
                 end_free = 0;
             }
             heap_size += bytes_to_get;
             end_free = start_free + bytes_to_get;
             //递归调用自己，调整nobjs
-            return chunk_alloc(bytes, nobjs);
+            return chunk_alloc(size, nobjs);
         }
     }
 
@@ -141,8 +141,8 @@ namespace STLite{
         if(bytes > MaxBytes::MAXBYTES){
             return malloc(bytes);
         }
-        FreeList **my_free_list, *result;
-        my_free_list = free_list + freelist_index(bytes);
+        FreeList *my_free_list, *result;
+        my_free_list = free_list[freelist_index(bytes)];
         result = my_free_list;
         //如果freelist没有空间了，则重新填充
         if(result == 0){

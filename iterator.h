@@ -1,6 +1,8 @@
 #ifndef _STLITE_ITERATOR_H_
 #define _STLITE_ITERATOR_H_
 
+#include <cstddef>
+
 namespace STLite{
 
     //定义5种迭代器类型
@@ -14,7 +16,7 @@ namespace STLite{
     struct output_iterator_tag {};
     struct forward_iterator_tag : public input_iterator_tag {};
     struct bidirectional_iterator_tag : public forward_iterator_tag {};
-    struct random_access_iterator_tag : public random_access_iterator_tag {};
+    struct random_access_iterator_tag : public bidirectional_iterator_tag {};
  
     //为每种迭代器定义5种型别
     template <class T, class Distance> struct input_iterator
