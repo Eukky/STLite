@@ -39,8 +39,29 @@ namespace STLite{
         }
 
     public:
+        //容器本身相关函数
         vector() : start(0), finish(0), end_of_storage(0) {}
-        vector(size_type n, const T& value) {fill_initialize(n, value);}
+        vector(size_type n, const T& value){
+            fill_initialize(n, value);
+        }
+
+        //迭代器相关函数
+        iterator begin(){
+            return start;
+        }
+        iterator end(){
+            return finish;
+        }
+
+        //容量相关函数
+        size_type size(){
+            return size_type(finish - start);
+        }
+
+        //访问容器相关函数
+        reference operator[](const difference_type i){
+            return *(begin() + i);
+        }
     };
 }
 
