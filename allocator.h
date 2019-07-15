@@ -21,8 +21,8 @@ namespace STLite{
     public:
         static T *allocate();
         static T *allocate(size_t n);
-        static void deallcate(T *ptr);
-        static void deallcate(T *ptr, size_t n);
+        static void deallocate(T *ptr);
+        static void deallocate(T *ptr, size_t n);
         
         static void construct(T *ptr);
         static void construct(T *ptr, const T& value);
@@ -46,12 +46,12 @@ namespace STLite{
     }
 
     template <class T>
-    void allocator<T>::deallcate(T *ptr){
+    void allocator<T>::deallocate(T *ptr){
         alloc::deallocate(static_cast<void *>(ptr), sizeof(T));
     }
 
     template <class T>
-    void allocator<T>::deallcate(T *ptr, size_t n){
+    void allocator<T>::deallocate(T *ptr, size_t n){
         alloc::deallocate(static_cast<void *>(ptr), sizeof(T) * n);
     }
 

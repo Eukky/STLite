@@ -25,18 +25,18 @@ namespace STLite{
         }
         return (result + i);
     }
-
+      template <class InputIterator, class ForwardIterator, class T>
+    ForwardIterator _uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result, T*){
+        typedef typename _type_traits<T>::is_POD_type is_POD_type;
+        return uninitialized_copy_aux(first, last, result, is_POD_type());
+    }
     template <class InputIterator, class ForwardIterator>
     ForwardIterator uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result){
         //先对迭代器类型进行萃取，判断出型别之后再用type_traits进行判断是否为POD类型
         // typedef typename _type_traits<iterator_traits<InputIterator>::value_type>::is_POD_type is_POD_type;
-        return _uninitialized_copy_aux(first, last, result, value_type(result));
+        return _uninitialized_copy(first, last, result, value_type(result));
     }
-    template <class InputIterator, class ForwardIterator, class T>
-    ForwardIterator _uninitialized_copy(InputIterator first, InputIterator last, ForwardIterator result, T*){
-        typedef typename _type_traits<T>::is_POD_type is_POD_type;
-        return _uninitialized_copy_aux(first, last, result, is_POD_type());
-    }
+  
 
 
     //uninitialized_fill函数
