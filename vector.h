@@ -22,69 +22,12 @@ namespace STLite{
         iterator finish;
         iterator end_of_storage;
 
-        void insert_aux(iterator position, const T& value){
-            //在position位置中插入value
-            if(finish != end_of_storage){
-                construct(finish, *(finish - 1));
-                ++finish;
-                T value_copy = value;
-                std::copy_backward(position, finish - 2, finish - 1);
-                *position = value_copy;
-            }else{
-                const size_type old_size = size();
-                //配置一段新的空间，如果原大小为0，则新空间为1，如果原大小不为0，则新空间为原大小的两倍
-                //前半段用来存储原数据，后半段用来存放新数据
-                const size_type len = old_size != 0 ? 2 * old_size : 1; 
-
-                iterator new_start = data_allocator::allocate(len);
-                iterator new_finish = new_start;
-
-                try{
-                    new_finish = uninitialized_copy(start, position, new_start);
-                    construct(new_finish, value);
-                    ++new_finish;
-                    new_finish = uninitialized_copy(position, finish, new_finish);
-                }
-                catch(...){
-                    destroy(new_start, new_finish);
-                    data_allocator::deallocate(new_start, len);
-                    throw;
-                }
-                
-                destroy(begin(), end());
-                deallocate();
-
-                start = new_start;
-                finish = new_finish;
-                end_of_storage = new_start + len;
-            }
-        }
-        void deallocate(){
-            if(start){
-                data_allocator::deallocate(start, end_of_storage - start);
-            }
-        }
-        void fill_initialize(size_type n, const T& value){
-            start = allocate_and_fill(n, value);
-            finish = start + n;
-            end_of_storage = finish;
-        }
-        iterator allocate_and_fill(size_type n, const T& value){
-            iterator result = data_allocator::allocate(n);
-            uninitialized_fill_n(result, n, value);
-            return result;
-        }
-        void allocate_and_copy(iterator first, iterator last){
-            start = data_allocator::allocate(last - first);
-            finish = uninitialized_copy(first, last, start);
-            end_of_storage = finish;
-        }
-        void destroy_and_deallocate_all(){
-            if(capacity() != 0){
-                data_allocator::destory(start, finish);
-                data_allocator::deallocate(start, capacity());
-            }
-        }
+        void insert_aux(iterator position, const T& value);
+        void deallocate();
+        void fill_initialize(size_type n, const T& value);
+        iterator allocate_and_fill(size_type n, const T& value);
+        void allocate_and_copy(iterator first, iterator last);
+        void destroy_and_deallocate_all();
 
     public:
         //容器本身相关函数
@@ -171,6 +114,83 @@ namespace STLite{
             destroy(finish);
         }
     };
+
+
+    template <class T, class Alloc>
+    void vector<T, Alloc>::insert_aux(iterator position, const T& value){
+        //在position位置中插入value
+        if(finish != end_of_storage){
+            construct(finish, *(finish - 1));
+            ++finish;
+            T value_copy = value;
+            std::copy_backward(position, finish - 2, finish - 1);
+            *position = value_copy;
+        }else{
+            const size_type old_size = size();
+            //配置一段新的空间，如果原大小为0，则新空间为1，如果原大小不为0，则新空间为原大小的两倍                
+            //前半段用来存储原数据，后半段用来存放新数据
+            const size_type len = old_size != 0 ? 2 * old_size : 1; 
+
+            iterator new_start = data_allocator::allocate(len);
+            iterator new_finish = new_start;
+
+            try{
+                new_finish = uninitialized_copy(start, position, new_start);
+                construct(new_finish, value);
+                ++new_finish;
+                new_finish = uninitialized_copy(position, finish, new_finish);
+            }
+            catch(...){
+                destroy(new_start, new_finish);
+                data_allocator::deallocate(new_start, len);
+                throw;
+            }
+                
+            destroy(begin(), end());
+            deallocate();
+
+            start = new_start;
+            finish = new_finish;
+            end_of_storage = new_start + len;
+        }
+    }
+
+    template <class T, class Alloc>
+    void vector<T, Alloc>::deallocate(){
+        if(start){
+            data_allocator::deallocate(start, end_of_storage - start);
+        }
+    }
+
+    template <class T, class Alloc>
+    void vector<T, Alloc>::fill_initialize(size_type n, const T& value){
+        start = allocate_and_fill(n, value);
+        finish = start + n;
+        end_of_storage = finish;
+    }
+
+    template <class T, class Alloc>
+    typename vector<T, Alloc>::iterator 
+    vector<T, Alloc>::allocate_and_fill(size_type n, const T& value){
+        iterator result = data_allocator::allocate(n);
+        uninitialized_fill_n(result, n, value);
+        return result;
+    }
+
+    template <class T, class Alloc>
+    void vector<T, Alloc>::allocate_and_copy(iterator first, iterator last){
+        start = data_allocator::allocate(last - first);
+        finish = uninitialized_copy(first, last, start);
+        end_of_storage = finish;
+    }
+
+    template <class T, class Alloc>
+    void vector<T, Alloc>::destroy_and_deallocate_all(){
+        if(capacity() != 0){
+            data_allocator::destory(start, finish);
+            data_allocator::deallocate(start, capacity());
+        }
+    }
 }
 
 #endif
