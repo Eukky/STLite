@@ -36,6 +36,7 @@ namespace STLite{
         //容器本身相关函数
         vector() : start(0), finish(0), end_of_storage(0) {}
         vector(size_type n, const T& value);
+        vector(iterator first, iterator last);
         ~vector();
 
         //迭代器相关函数
@@ -232,6 +233,14 @@ namespace STLite{
     template <class T, class Alloc>
     vector<T, Alloc>::vector(size_type n, const T& value){
         fill_initialize(n, value);
+    }
+
+    template <class T, class Alloc>
+    vector<T, Alloc>::vector(iterator first, iterator last){
+        size_type len = last - first;
+        start = data_allocator::allocate(len);
+        finish = uninitialized_copy(first, last, start);
+        end_of_storage = finish;
     }
 
     template <class T, class Alloc>
