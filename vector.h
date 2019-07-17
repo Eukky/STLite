@@ -66,7 +66,7 @@ namespace STLite{
         void pop_back();
         iterator insert(iterator position, const T& value);
         void insert(iterator position, const size_type& n, const T& value);
-        void insert(iterator position, iterator first, iterator last;)
+        void insert(iterator position, iterator first, iterator last);
         iterator erase(iterator position);
         iterator erase(iterator first, iterator last);
     };
@@ -115,7 +115,7 @@ namespace STLite{
     template <class T, class Alloc>
     void vector<T, Alloc>::insert_aux(iterator position, const size_type& n, const T& value){
         difference_type left = end_of_storage - finish;
-        difference_type need = last - first;
+        difference_type need = n;
         if(left >= need){
             iterator tmp = end() - 1;
             for(; tmp - position >= 0; --tmp){
@@ -131,9 +131,9 @@ namespace STLite{
             iterator new_finish = new_start;
 
             try{
-                new_finish = uninitialized_copy(start, position, new_start);
+                new_finish = uninitialized_copy(begin(), position, new_start);
                 new_finish = uninitialized_fill_n(new_finish, n, value);
-                new_finish = uninitialized_copy(position, last, new_finish);
+                new_finish = uninitialized_copy(position, end(), new_finish);
             }
             catch(...){
                 destroy(new_start, new_finish);
@@ -278,12 +278,12 @@ namespace STLite{
         }
     }
 
-    template <class T, Alloc>
+    template <class T, class Alloc>
     void vector<T, Alloc>::reserve(size_type n){
         if(n < capacity()){
             return;
         }
-        iterator new_start = data_allocator::allocate(n)
+        iterator new_start = data_allocator::allocate(n);
         iterator new_finish = uninitialized_copy(begin(), end(), new_start);
 
         destroy(begin(), end());
@@ -291,7 +291,7 @@ namespace STLite{
 
         start = new_start;
         finish = new_finish;
-        end_of_storage = new_start + len;
+        end_of_storage = new_start + n;
     }
 
     template <class T, class Alloc>
@@ -380,7 +380,7 @@ namespace STLite{
     template <class T, class Alloc>
     typename vector<T, Alloc>::iterator
     vector<T, Alloc>::insert(iterator position, const T& value){
-        const iterator index = position - begin();
+        const auto index = position - begin();
         insert_aux(position, value);
         return begin() + index;
     }
@@ -408,7 +408,7 @@ namespace STLite{
 
     template <class T, class Alloc>
     typename vector<T, Alloc>::iterator
-    vector<T, Alloc>::erase(iterator position, iterator first, iterator last){
+    vector<T, Alloc>::erase(iterator first, iterator last){
         iterator tmp = std::copy(last, finish, first);
         destroy(tmp, finish);
         finish = finish - (last - first);
