@@ -36,6 +36,7 @@ namespace STLite{
         //容器本身相关函数
         vector() : start(0), finish(0), end_of_storage(0) {}
         vector(size_type n, const T& value);
+        vector(const T& value);
         vector(iterator first, iterator last);
         ~vector();
 
@@ -233,6 +234,11 @@ namespace STLite{
     template <class T, class Alloc>
     vector<T, Alloc>::vector(size_type n, const T& value){
         fill_initialize(n, value);
+    }
+
+    template <class T, class Alloc>
+    vector<T, Alloc>::vector(const T& value){
+        fill_initialize(1, value);
     }
 
     template <class T, class Alloc>

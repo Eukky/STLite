@@ -5,7 +5,7 @@
 
 #include <vector>
 #include <iostream>
-
+using namespace std;
 namespace STLite{
     namespace VectorTest{
 
