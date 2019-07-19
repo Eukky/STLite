@@ -1,7 +1,7 @@
 #ifndef _STLITE_VECTOR_TEST_H_
 #define _STLITE_VECTOR_TEST_H_
 
-#include "../vector.h"
+#include "../stlite/vector.h"
 
 #include <vector>
 #include <iostream>
