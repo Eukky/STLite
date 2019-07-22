@@ -50,7 +50,7 @@ namespace STLite{
     void uninitialized_fill_aux(ForwardIterator first, ForwardIterator last,
     const T& value, _false_type){
         for(; first != last; ++first){
-            contruct(first, value);
+            construct(first, value);
         }
     }
 
@@ -70,7 +70,7 @@ namespace STLite{
     ForwardIterator uninitialized_fill_n_aux(ForwardIterator first, size n, const T& value, _false_type){
         int i = 0;
         for(; i != n; ++i){
-            contruct((T*)(first + i), value);
+            construct((T*)(first + i), value);
         }
         return (first + i);
     }

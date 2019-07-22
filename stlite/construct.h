@@ -8,7 +8,7 @@
 namespace STLite{
 
     template <class T1, class T2>
-    inline void construct(T1 *ptr, const T2 &value){
+    inline void construct(T1 *ptr, const T2& value){
         //placement new
         //在分配的ptr指向的空间构造对象
         //调用T1::T1(value)

@@ -36,6 +36,7 @@ namespace STLite{
         //容器本身相关函数
         vector() : start(0), finish(0), end_of_storage(0) {}
         vector(size_type n, const T& value);
+        vector(size_type n);
         vector(const T& value);
         vector(iterator first, iterator last);
         ~vector();
@@ -94,10 +95,10 @@ namespace STLite{
             iterator new_finish = new_start;
 
             try{
-                new_finish = uninitialized_copy(start, position, new_start);
+                new_finish = STLite::uninitialized_copy(start, position, new_start);
                 construct(new_finish, value);
                 ++new_finish;
-                new_finish = uninitialized_copy(position, finish, new_finish);
+                new_finish = STLite::uninitialized_copy(position, finish, new_finish);
             }
             catch(...){
                 destroy(new_start, new_finish);
@@ -123,7 +124,7 @@ namespace STLite{
             for(; tmp - position >= 0; --tmp){
                 construct(tmp + need, *tmp);
             }
-            uninitialized_fill_n(position, n, value);
+            STLite::uninitialized_fill_n(position, n, value);
             finish += need;
         }else{
             const size_type old_size = size();
@@ -133,9 +134,9 @@ namespace STLite{
             iterator new_finish = new_start;
 
             try{
-                new_finish = uninitialized_copy(begin(), position, new_start);
-                new_finish = uninitialized_fill_n(new_finish, n, value);
-                new_finish = uninitialized_copy(position, end(), new_finish);
+                new_finish = STLite::uninitialized_copy(begin(), position, new_start);
+                new_finish = STLite::uninitialized_fill_n(new_finish, n, value);
+                new_finish = STLite::uninitialized_copy(position, end(), new_finish);
             }
             catch(...){
                 destroy(new_start, new_finish);
@@ -158,12 +159,12 @@ namespace STLite{
         difference_type need = last - first;
         if(left >= need){
             if(finish - position >= need){
-                uninitialized_copy(finish - need, finish, finish);
+                STLite::uninitialized_copy(finish - need, finish, finish);
                 std::copy_backward(position, finish - need, finish);
                 std::copy(first, last, position);
             }else{
-                iterator tmp = uninitialized_copy(first + (finish - position), last, finish);
-                uninitialized_copy(position, finish, tmp);
+                iterator tmp = STLite::uninitialized_copy(first + (finish - position), last, finish);
+                STLite::uninitialized_copy(position, finish, tmp);
                 std::copy(first, first + (finish - position), position);
             }
             finish += need;
@@ -175,9 +176,9 @@ namespace STLite{
             iterator new_finish = new_start;
 
             try{
-                new_finish = uninitialized_copy(start, position, new_start);
-                new_finish = uninitialized_copy(first, last, new_finish);
-                new_finish = uninitialized_copy(position, last, new_finish);
+                new_finish = STLite::uninitialized_copy(start, position, new_start);
+                new_finish = STLite::uninitialized_copy(first, last, new_finish);
+                new_finish = STLite::uninitialized_copy(position, last, new_finish);
             }
             catch(...){
                 destroy(new_start, new_finish);
@@ -212,14 +213,14 @@ namespace STLite{
     typename vector<T, Alloc>::iterator 
     vector<T, Alloc>::allocate_and_fill(size_type n, const T& value){
         iterator result = data_allocator::allocate(n);
-        uninitialized_fill_n(result, n, value);
+        STLite::uninitialized_fill_n(result, n, value);
         return result;
     }
 
     template <class T, class Alloc>
     void vector<T, Alloc>::allocate_and_copy(iterator first, iterator last){
         start = data_allocator::allocate(last - first);
-        finish = uninitialized_copy(first, last, start);
+        finish = STLite::uninitialized_copy(first, last, start);
         end_of_storage = finish;
     }
 
@@ -237,6 +238,11 @@ namespace STLite{
     }
 
     template <class T, class Alloc>
+    vector<T, Alloc>::vector(size_type n){
+        fill_initialize(n, value_type());
+    }
+
+    template <class T, class Alloc>
     vector<T, Alloc>::vector(const T& value){
         fill_initialize(1, value);
     }
@@ -245,7 +251,7 @@ namespace STLite{
     vector<T, Alloc>::vector(iterator first, iterator last){
         size_type len = last - first;
         start = data_allocator::allocate(len);
-        finish = uninitialized_copy(first, last, start);
+        finish = STLite::uninitialized_copy(first, last, start);
         end_of_storage = finish;
     }
 
@@ -299,7 +305,7 @@ namespace STLite{
             return;
         }
         iterator new_start = data_allocator::allocate(n);
-        iterator new_finish = uninitialized_copy(begin(), end(), new_start);
+        iterator new_finish = STLite::uninitialized_copy(begin(), end(), new_start);
 
         destroy(begin(), end());
         deallocate();
