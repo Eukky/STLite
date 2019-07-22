@@ -10,16 +10,8 @@ message(STATUS "The version of this project is: ${STLite_VERSION}")
 
 set(CMAKE_BUILD_TYPE release)
 
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/lib)
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/build/bin)
 
-# aux_source_directory(. DIRSRCS)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-include_directories(./ ./Test)
-
-add_subdirectory(Test)
-
-add_executable(stlite ./)
-
-target_link_libraries(stlite Test)
-
+add_subdirectory(${PROJECT_SOURCE_DIR}/test)

@@ -2,3 +2,9 @@
 .DS_Store
 */.DS_Store
 *.out
+bin/*
+*/CMakeFiles/*
+CMakeFiles/*
+*.cmake
+CmakeCache.txt
+Makefile
